@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.team1.android.eabtracker.MapFragment">
+
+    <!-- MapView layout and initial basemap and extent. -->
+
+    <com.esri.android.map.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        mapoptions.MapType="Topo"
+        mapoptions.ZoomLevel="14"
+        mapoptions.center="44.666354, -95.903557"
+        url="http://www.arcgis.com/home/item.html?id=caee4b7fdf5c49c285995b5d1b25e123"/>
+
+</FrameLayout>
