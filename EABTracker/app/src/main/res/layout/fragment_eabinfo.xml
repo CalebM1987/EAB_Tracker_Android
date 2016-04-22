@@ -1,13 +1,236 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.team1.android.eabtracker.EABInfoFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context="com.team1.android.eabtracker.EABInfoFragment"
+    android:id="@+id/main"
+    android:background="@android:color/black">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="EAB Info Here as a list/scroll view" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="@string/beetle_characteristic"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textSize="25sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:background="#aaffffff"
+            android:height="50dp"
+            android:id="@+id/textView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:text="@string/beetle_info"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:gravity="center"
+            android:background="@android:drawable/bottom_bar" />
+
+        <!--<VideoView
+            android:layout_width="400dp"
+            android:layout_height="250dp"
+            android:id="@+id/VideoView"
+            android:layout_gravity="center" />-->
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/horizontalScrollView"
+            android:layout_gravity="center_horizontal"
+            android:nestedScrollingEnabled="false"
+            android:measureAllChildren="false"
+            android:fillViewport="true"
+            android:background="@android:drawable/bottom_bar">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/emerald_ash_borer" />
+
+                <ImageView
+                    android:layout_width="379dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView2"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/adult_beetle" />
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="20dp" />
+
+                <ImageView
+                    android:layout_width="378dp"
+                    android:layout_height="228dp"
+                    android:id="@+id/imageView3"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/emeraldashborerdorsal" />
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="20dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="@string/larvae"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textSize="25sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:background="#aaffffff"
+            android:height="50dp"
+            android:id="@+id/textView1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:text="@string/larvae_info"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:gravity="center"
+            android:background="@android:drawable/bottom_bar" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/horizontalScrollView2"
+            android:layout_gravity="center_horizontal"
+            android:nestedScrollingEnabled="false"
+            android:measureAllChildren="false"
+            android:fillViewport="true"
+            android:background="@android:drawable/bottom_bar" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:layout_width="399dp"
+                    android:layout_height="298dp"
+                    android:id="@+id/imageView7"
+                    android:src="@drawable/eab___adult_and_larva__emerald_ash_borer_adult_and_larva___credit_to_cfia" />
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="20dp" />
+
+                <ImageView
+                    android:layout_width="431dp"
+                    android:layout_height="296dp"
+                    android:id="@+id/imageView4"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/larvae" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="@string/exit_holes"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textSize="25sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:background="#aaffffff"
+            android:height="50dp"
+            android:id="@+id/textView2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:text="@string/exit_hole_info1"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:gravity="center"
+            android:background="@android:drawable/bottom_bar" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/bottom_bar" >
+
+            <ImageView
+                android:layout_width="400dp"
+                android:layout_height="300dp"
+                android:id="@+id/imageView5"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/exit_hole" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:text="@string/exit_hole_info2"
+            android:id="@+id/textView6"
+            android:layout_gravity="center_horizontal"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:gravity="center"
+            android:background="@android:drawable/bottom_bar" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/bottom_bar">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView6"
+                android:src="@drawable/s_gallery" />
+        </FrameLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+
+
+</ScrollView>
