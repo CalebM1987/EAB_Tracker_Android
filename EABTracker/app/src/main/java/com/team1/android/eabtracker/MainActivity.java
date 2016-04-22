@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
-        window.setNavigationBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
+        window.setStatusBarColor(this.getResources().getColor(R.color.colorStatus));
+        window.setNavigationBarColor(this.getResources().getColor(R.color.colorTest3));
 
     }
 
