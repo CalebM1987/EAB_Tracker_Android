@@ -24,14 +24,14 @@ public class YoutubeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.you_tube_api, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_eabinfo, container, false);
 
 
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
 
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_layout, youTubePlayerFragment).commit();
+        transaction.add(R.id.youtube_layout1, youTubePlayerFragment).commit();
 
 
         youTubePlayerFragment.initialize(API_KEY, new OnInitializedListener() {

@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     tools:context="com.team1.android.eabtracker.MapFragment">
 
+    <Button
+        android:id="@+id/ReportButton"
+        android:layout_height="wrap_content"
+        android:text="Report Sighting"
+        android:imeOptions="actionDone"
+        android:layout_width="fill_parent"
+        android:layout_gravity="right">
+    </Button>
+
     <!-- MapView layout and initial basemap and extent. -->
 
     <com.esri.android.map.MapView
