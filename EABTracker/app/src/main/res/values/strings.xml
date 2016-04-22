@@ -5,10 +5,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="ash_characteristic">Ash Tree Information</string>
     <string name="beetle_characteristic">Beetle Characteristics</string>
     <string name="larvae">Larvae Characteristics</string>
     <string name="exit_holes">Exit Hole Characteristics</string>
+    <string name="bark_damage">Signs of Bark Damage</string>
+    <string name="tree_canopy">Ash Tree Canopy</string>
+    <string name="canopy_info">An Ash Tree in poor health has poor shape and color in the fall, and also fails to provide shade</string>
+    <string name="bark_info">Bark splitting and woodpecker damage are both symptoms of EAB infestation</string>
+    <string name="ash_info">A healthy Ash Tree has a full canopy and no bark damage</string>
     <string name="beetle_info">The Beetle is Metallic Green in color and approximately 1/2 inch long.</string>
     <string name="larvae_info">When visible, the larvae is cream colored, slightly flattened and have pincer like appendages at the end of their abdomen.</string>
     <string name="exit_hole_info1">D-Shaped Exit Holes - D shaped exit hole approx 1/8 in diameter.</string>

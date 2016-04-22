@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.team1.android.eabtracker.EABInfoFragment"
     android:id="@+id/main"
-    android:background="@android:color/black">
+    android:background="@color/colorTest3">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,20 +14,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:text="@string/beetle_characteristic"
+            android:text="@string/ash_characteristic"
             android:gravity="center"
             android:textStyle="bold"
             android:typeface="serif"
             android:textSize="25sp"
             android:textColor="@color/abc_primary_text_material_dark"
-            android:background="#aaffffff"
+            android:background="@android:drawable/editbox_dropdown_dark_frame"
             android:height="50dp"
             android:id="@+id/textView"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:text="@string/beetle_info"
+            android:text="@string/ash_info"
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
             android:typeface="serif"
@@ -35,57 +35,46 @@
             android:textSize="15sp"
             android:textColor="@color/abc_primary_text_material_dark"
             android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
 
         <!--<VideoView
             android:layout_width="400dp"
             android:layout_height="250dp"
             android:id="@+id/VideoView"
             android:layout_gravity="center" />-->
-
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/horizontalScrollView"
+            android:id="@+id/horizontalScrollView1"
             android:layout_gravity="center_horizontal"
             android:nestedScrollingEnabled="false"
             android:measureAllChildren="false"
             android:fillViewport="true"
-            android:background="@android:drawable/bottom_bar">
+            android:background="@android:drawable/editbox_dropdown_dark_frame" >
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/imageView"
+                    android:layout_width="400dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/imageView1"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/emerald_ash_borer" />
+                    android:src="@drawable/ash_tree_identification" />
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="20dp" />
 
                 <ImageView
-                    android:layout_width="379dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="431dp"
+                    android:layout_height="296dp"
                     android:id="@+id/imageView2"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/adult_beetle" />
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ash_bark" />
 
-                <Space
-                    android:layout_width="50dp"
-                    android:layout_height="20dp" />
-
-                <ImageView
-                    android:layout_width="378dp"
-                    android:layout_height="228dp"
-                    android:id="@+id/imageView3"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/emeraldashborerdorsal" />
-
-                <Space
-                    android:layout_width="50dp"
-                    android:layout_height="20dp" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -97,20 +86,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:text="@string/larvae"
+            android:text="@string/bark_damage"
             android:gravity="center"
             android:textStyle="bold"
             android:typeface="serif"
             android:textSize="25sp"
             android:textColor="@color/abc_primary_text_material_dark"
-            android:background="#aaffffff"
+            android:background="@android:drawable/editbox_dropdown_dark_frame"
             android:height="50dp"
             android:id="@+id/textView1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:text="@string/larvae_info"
+            android:text="@string/bark_info"
             android:id="@+id/textView4"
             android:layout_gravity="center_horizontal"
             android:typeface="serif"
@@ -118,12 +107,79 @@
             android:textSize="15sp"
             android:textColor="@color/abc_primary_text_material_dark"
             android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/horizontalScrollView2"
+            android:layout_gravity="center_horizontal"
+            android:nestedScrollingEnabled="false"
+            android:measureAllChildren="false"
+            android:fillViewport="true"
+            android:background="@android:drawable/editbox_dropdown_dark_frame" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:layout_width="400dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/imageView3"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ash_vertical_split" />
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="20dp" />
+
+                <ImageView
+                    android:layout_width="431dp"
+                    android:layout_height="296dp"
+                    android:id="@+id/imageView4"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/woodpecker_flecking" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="@string/tree_canopy"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textSize="25sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:background="@android:drawable/editbox_dropdown_dark_frame"
+            android:height="50dp"
+            android:id="@+id/textView2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:text="@string/canopy_info"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/abc_primary_text_material_dark"
+            android:gravity="center"
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/horizontalScrollView3"
             android:layout_gravity="center_horizontal"
             android:nestedScrollingEnabled="false"
             android:measureAllChildren="false"
@@ -136,10 +192,12 @@
                 android:layout_height="match_parent" >
 
                 <ImageView
-                    android:layout_width="399dp"
-                    android:layout_height="298dp"
-                    android:id="@+id/imageView7"
-                    android:src="@drawable/eab___adult_and_larva__emerald_ash_borer_adult_and_larva___credit_to_cfia" />
+                    android:layout_width="400dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/imageView5"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ash_crown_thinning"
+                    android:background="@android:drawable/editbox_dropdown_dark_frame" />
 
                 <Space
                     android:layout_width="50dp"
@@ -148,9 +206,9 @@
                 <ImageView
                     android:layout_width="431dp"
                     android:layout_height="296dp"
-                    android:id="@+id/imageView4"
+                    android:id="@+id/imageView6"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/larvae" />
+                    android:src="@drawable/ash_crown_thinning2" />
 
             </LinearLayout>
         </HorizontalScrollView>
@@ -160,77 +218,5 @@
             android:layout_height="25dp"
             android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:text="@string/exit_holes"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:textSize="25sp"
-            android:textColor="@color/abc_primary_text_material_dark"
-            android:background="#aaffffff"
-            android:height="50dp"
-            android:id="@+id/textView2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="65dp"
-            android:text="@string/exit_hole_info1"
-            android:id="@+id/textView5"
-            android:layout_gravity="center_horizontal"
-            android:typeface="serif"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/abc_primary_text_material_dark"
-            android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/bottom_bar" >
-
-            <ImageView
-                android:layout_width="400dp"
-                android:layout_height="300dp"
-                android:id="@+id/imageView5"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/exit_hole" />
-        </FrameLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="65dp"
-            android:text="@string/exit_hole_info2"
-            android:id="@+id/textView6"
-            android:layout_gravity="center_horizontal"
-            android:typeface="serif"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/abc_primary_text_material_dark"
-            android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/bottom_bar">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView6"
-                android:src="@drawable/s_gallery" />
-        </FrameLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal" />
-
     </LinearLayout>
-
-
-
 </ScrollView>
