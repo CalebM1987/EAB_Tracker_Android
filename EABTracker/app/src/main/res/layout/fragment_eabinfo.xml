@@ -89,6 +89,13 @@
             </LinearLayout>
         </HorizontalScrollView>
 
+        <FrameLayout
+            android:id="@+id/youtube_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="25dp"
@@ -169,7 +176,7 @@
             android:typeface="serif"
             android:textSize="25sp"
             android:textColor="@color/abc_primary_text_material_dark"
-            android:background="#aaffffff"
+            android:background="@android:drawable/editbox_dropdown_dark_frame"
             android:height="50dp"
             android:id="@+id/textView2" />
 
@@ -184,12 +191,12 @@
             android:textSize="15sp"
             android:textColor="@color/abc_primary_text_material_dark"
             android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/bottom_bar" >
+            android:background="@android:drawable/editbox_dropdown_dark_frame" >
 
             <ImageView
                 android:layout_width="400dp"
@@ -210,12 +217,12 @@
             android:textSize="15sp"
             android:textColor="@color/abc_primary_text_material_dark"
             android:gravity="center"
-            android:background="@android:drawable/bottom_bar" />
+            android:background="@android:drawable/editbox_dropdown_dark_frame" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/bottom_bar">
+            android:background="@android:drawable/editbox_dropdown_dark_frame">
 
             <ImageView
                 android:layout_width="match_parent"

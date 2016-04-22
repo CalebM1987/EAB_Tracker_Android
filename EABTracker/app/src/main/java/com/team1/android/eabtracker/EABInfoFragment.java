@@ -8,20 +8,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EABInfoFragment extends Fragment {
+
+    private static final String API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+
+    private static String VIDEO_ID = "WAOEaLGm-Ic";
 
 
     public EABInfoFragment() {
@@ -42,14 +54,34 @@ public class EABInfoFragment extends Fragment {
         */
         View rootView = inflater.inflate(R.layout.fragment_eabinfo, container, false);
 
-        /*VideoView videoView = (VideoView) rootView.findViewById(R.id.VideoView);
-        MediaController mc = new MediaController(this.getContext());
-        mc.setAnchorView(videoView);
-        Uri uri = Uri.parse("rtsp://r4---sn-vgqsen7r.googlevideo.com/Cj0LENy73wIaNAmH-KaxaIQDWBMYDSANFC1l_RdXMOCoAUIASARgqKaqoqXIyYFXigELWk0zSGpqRDZhMGMM/5A38524F36FE7ABC39DCB41CC30439F40AFDFB6B.BDEB5B85901DA6C91FBEA8655085F70D6105C76C/yt6/1/video.3gp");
-        videoView.setMediaController(mc);
-        videoView.setVideoURI(uri);*/
-        //videoView.requestFocus();
-        //videoView.start();
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_layout1, youTubePlayerFragment).commit();
+
+
+        youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
+
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    player.loadVideo(VIDEO_ID);
+                    player.play();
+                }
+            }
+
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                // YouTube error
+                String errorMessage = error.toString();
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                Log.d("errorMessage:", errorMessage);
+            }
+        });
 
         return rootView;
 
