@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new MapFragment(), "Map");
         adapter.addFragment(new EABInfoFragment(), "EAB Info");
-        adapter.addFragment(new YoutubeFragment(), "EAB Video");
         adapter.addFragment(new AshInfoFragment(), "Ash Info");
         viewPager.setAdapter(adapter);
     }
