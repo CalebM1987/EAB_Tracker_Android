@@ -6,11 +6,11 @@
 
     <Button
         android:id="@+id/ReportButton"
-        android:layout_height="wrap_content"
-        android:text="Report Sighting"
+        android:layout_height="64dp"
         android:imeOptions="actionDone"
-        android:layout_width="fill_parent"
-        android:layout_gravity="right">
+        android:layout_width="64dp"
+        android:layout_gravity="right"
+        android:background="@android:drawable/ic_delete">
     </Button>
 
     <!-- MapView layout and initial basemap and extent. -->
@@ -22,6 +22,7 @@
         mapoptions.MapType="Topo"
         mapoptions.ZoomLevel="14"
         mapoptions.center="44.666354, -95.903557"
-        url="http://www.arcgis.com/home/item.html?id=caee4b7fdf5c49c285995b5d1b25e123"/>
+        url="http://www.arcgis.com/home/item.html?id=caee4b7fdf5c49c285995b5d1b25e123"
+        android:layout_gravity="right|bottom" />
 
 </FrameLayout>
