@@ -10,7 +10,7 @@
         android:imeOptions="actionDone"
         android:layout_width="64dp"
         android:layout_gravity="right"
-        android:background="@android:drawable/ic_delete">
+        android:background="@android:drawable/ic_input_add">
     </Button>
 
     <!-- MapView layout and initial basemap and extent. -->

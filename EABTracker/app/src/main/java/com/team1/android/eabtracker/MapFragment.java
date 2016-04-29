@@ -19,6 +19,10 @@ import android.provider.MediaStore;
 import android.view.View.OnClickListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+
 
 // ArcGIS Runtime SDK modules
 import com.esri.android.map.Layer;
@@ -127,13 +131,6 @@ public class MapFragment extends Fragment {
         // Set the Esri logo to be visible, and enable map to wrap around date line.
         map.setEsriLogoVisible(true);
         map.enableWrapAround(true);
-        Log.d("test", "map is loaded outside listener: " + map.isLoaded());
-        Layer[] layers = map.getLayers();
-        for (Layer layer: layers){
-            System.out.print("layer " + layer.getName());
-            Log.d("layer", "layer: " + layer.getName());
-        }
-
 
         // Restore map state (center and resolution) if a previously saved state is available, otherwise set initial extent
 
@@ -179,6 +176,103 @@ public class MapFragment extends Fragment {
                     locationManager.setAutoPanMode(LocationDisplayManager.AutoPanMode.NAVIGATION);
                     locationManager.setWanderExtentFactor(0.75f);
                     locationManager.start();
+                }
+            }
+        });
+
+        // Tap on the map and show popups for selected features.
+        map.setOnSingleTapListener(new OnSingleTapListener() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void onSingleTap(float x, float y) {
+                if (map.isLoaded()) {
+                    // Instantiate a PopupContainer
+                    popupContainer = new PopupContainer(map);
+                    int id = popupContainer.hashCode();
+                    popupDialog = null;
+                    // Display spinner.
+                    if (progressDialog == null || !progressDialog.isShowing())
+                        progressDialog = ProgressDialog.show(map.getContext(),
+                                "", "Querying...");
+
+                    // Loop through each layer in the webmap
+                    int tolerance = 20;
+                    Envelope env = new Envelope(map.toMapPoint(x, y), 20 * map
+                            .getResolution(), 20 * map.getResolution());
+                    Layer[] layers = map.getLayers();
+                    count = new AtomicInteger();
+                    for (Layer layer : layers) {
+                        // If the layer has not been initialized or is
+                        // invisible, do nothing.
+                        if (!layer.isInitialized() || !layer.isVisible())
+                            continue;
+
+                        if (layer instanceof ArcGISFeatureLayer) {
+                            // Query feature layer and display popups
+                            ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
+                            if (featureLayer.getPopupInfo() != null && !featureLayer.getName().equals("County Boundary")) {
+                                // Query feature layer which is associated with
+                                // a popup definition.
+                                count.incrementAndGet();
+                                new RunQueryFeatureLayerTask(x, y, tolerance,
+                                        id).execute(featureLayer);
+                            }
+                        } else if (layer instanceof ArcGISDynamicMapServiceLayer) {
+                            // Query dynamic map service layer and display
+                            // popups.
+                            ArcGISDynamicMapServiceLayer dynamicLayer = (ArcGISDynamicMapServiceLayer) layer;
+                            // Retrieve layer info for each sub-layer of the
+                            // dynamic map service layer.
+                            ArcGISLayerInfo[] layerinfos = dynamicLayer
+                                    .getAllLayers();
+                            if (layerinfos == null)
+                                continue;
+
+                            // Loop through each sub-layer
+                            for (ArcGISLayerInfo layerInfo : layerinfos) {
+                                // Obtain PopupInfo for sub-layer.
+                                PopupInfo popupInfo = dynamicLayer
+                                        .getPopupInfo(layerInfo.getId());
+                                // Skip sub-layer which is without a popup
+                                // definition.
+                                if (popupInfo == null) {
+                                    continue;
+                                }
+                                // Check if a sub-layer is visible.
+                                ArcGISLayerInfo info = layerInfo;
+                                while (info != null && info.isVisible()) {
+                                    info = info.getParentLayer();
+                                }
+                                // Skip invisible sub-layer
+                                if (info != null && !info.isVisible()) {
+                                    continue;
+                                }
+
+                                // Check if the sub-layer is within the scale
+                                // range
+                                double maxScale = (layerInfo.getMaxScale() != 0) ? layerInfo
+                                        .getMaxScale() : popupInfo
+                                        .getMaxScale();
+                                double minScale = (layerInfo.getMinScale() != 0) ? layerInfo
+                                        .getMinScale() : popupInfo
+                                        .getMinScale();
+
+                                if ((maxScale == 0 || map.getScale() > maxScale)
+                                        && (minScale == 0 || map.getScale() < minScale)) {
+                                    // Query sub-layer which is associated with
+                                    // a popup definition and is visible and in
+                                    // scale range.
+                                    count.incrementAndGet();
+                                    new RunQueryDynamicLayerTask(env, layer,
+                                            layerInfo.getId(), dynamicLayer
+                                            .getSpatialReference(), id)
+                                            .execute(dynamicLayer.getUrl()
+                                                    + "/" + layerInfo.getId());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -254,6 +348,194 @@ public class MapFragment extends Fragment {
         }
     }
 
+    // Query feature layer by hit test
+    private class RunQueryFeatureLayerTask extends
+            AsyncTask<ArcGISFeatureLayer, Void, Feature[]> {
+
+        private int tolerance;
+        private float x;
+        private float y;
+        private ArcGISFeatureLayer featureLayer;
+        private int id;
+
+        public RunQueryFeatureLayerTask(float x, float y, int tolerance, int id) {
+            super();
+            this.x = x;
+            this.y = y;
+            this.tolerance = tolerance;
+            this.id = id;
+        }
+
+        @Override
+        protected Feature[] doInBackground(ArcGISFeatureLayer... params) {
+            for (ArcGISFeatureLayer fLayer : params) {
+                this.featureLayer = fLayer;
+                // Retrieve feature ids near the point.
+                int[] ids = fLayer.getGraphicIDs(x, y, tolerance);
+                if (ids != null && ids.length > 0) {
+                    ArrayList<Feature> features = new ArrayList<Feature>();
+                    for (int graphicId : ids) {
+                        // Obtain feature based on the id.
+                        Feature f = fLayer.getGraphic(graphicId);
+                        if (f == null)
+                            continue;
+                        features.add(f);
+                    }
+                    // Return an array of features near the point.
+                    return features.toArray(new Feature[0]);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Feature[] features) {
+            count.decrementAndGet();
+            // Validate parameter.
+            if (features == null || features.length == 0) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+            // Check if the requested PopupContainer id is the same as the
+            // current PopupContainer.
+            // Otherwise, abandon the obsoleted query result.
+            if (id != popupContainer.hashCode()) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+
+            PopupInfo popupInfo = featureLayer.getPopupInfo();
+            if (popupInfo == null) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+
+            for (Feature fr : features) {
+                Popup popup = featureLayer.createPopup(map, 0, fr);
+                popupContainer.addPopup(popup);
+            }
+            createEditorBar(featureLayer, true);
+            createPopupViews(id);
+        }
+
+    }
+
+    // popup views
+    private void createPopupViews(final int id) {
+        if (id != popupContainer.hashCode()) {
+            if (progressDialog != null && progressDialog.isShowing()
+                    && count.intValue() == 0)
+                progressDialog.dismiss();
+
+            return;
+        }
+
+        if (popupDialog == null) {
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            // Create a dialog for the popups and display it.
+            popupDialog = new PopupDialog(map.getContext(), popupContainer);
+            popupDialog.show();
+        }
+    }
+
+
+    // Query dynamic map service layer by QueryTask
+    private class RunQueryDynamicLayerTask extends
+            AsyncTask<String, Void, FeatureSet> {
+        private Envelope env;
+        private SpatialReference sr;
+        private int id;
+        private Layer layer;
+        private int subLayerId;
+
+        public RunQueryDynamicLayerTask(Envelope env, Layer layer,
+                                        int subLayerId, SpatialReference sr, int id) {
+            super();
+            this.env = env;
+            this.sr = sr;
+            this.id = id;
+            this.layer = layer;
+            this.subLayerId = subLayerId;
+        }
+
+        @Override
+        protected FeatureSet doInBackground(String... urls) {
+            for (String url : urls) {
+                // Retrieve features within the envelope.
+                Query query = new Query();
+                query.setInSpatialReference(sr);
+                query.setOutSpatialReference(sr);
+                query.setGeometry(env);
+                query.setMaxFeatures(10);
+                query.setOutFields(new String[] { "*" });
+
+                QueryTask queryTask = new QueryTask(url);
+                try {
+                    FeatureSet results = queryTask.execute(query);
+                    return results;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final FeatureSet result) {
+            // Validate parameter.
+            count.decrementAndGet();
+            if (result == null) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+            Feature[] features = result.getGraphics();
+            if (features == null || features.length == 0) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+            // Check if the requested PopupContainer id is the same as the
+            // current PopupContainer.
+            // Otherwise, abandon the obsoleted query result.
+            if (id != popupContainer.hashCode()) {
+                // Dismiss spinner
+                if (progressDialog != null && progressDialog.isShowing()
+                        && count.intValue() == 0)
+                    progressDialog.dismiss();
+
+                return;
+            }
+
+            for (Feature fr : features) {
+                Popup popup = layer.createPopup(map, subLayerId, fr);
+                popupContainer.addPopup(popup);
+            }
+            createPopupViews(id);
+
+        }
+    }
+
     // handle edits
     private class EditCallbackListener implements
             CallbackListener<FeatureEditResult[][]> {
@@ -299,6 +581,7 @@ public class MapFragment extends Fragment {
                 // Get newly added attachments
                 List<File> attachments = popupContainer.getCurrentPopup()
                         .getAddedAttachments();
+                Log.d("attachments", "" + attachments.size());
                 if (attachments != null && attachments.size() > 0) {
                     for (File attachment : attachments) {
                         // Save newly added attachment based on the object id of
@@ -446,14 +729,8 @@ public class MapFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-
-                startActivityForResult(new Intent(Intent.ACTION_PICK,
-                        MediaStore.Images.Media.INTERNAL_CONTENT_URI), 1);
-
-                /*
-                Intent takePictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.ACTION_IMAGE_CAPTURE);
-                */
-                //MapFragment.this.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                // allow user to choose photo or take photo
+                selectImage();
 
             }
         });
@@ -522,6 +799,18 @@ public class MapFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == getActivity().RESULT_OK && data != null
+                && popupContainer != null) {
+            // Add the selected media as attachment.
+            Uri selectedImage = data.getData();
+            popupContainer.getCurrentPopup().addAttachment(selectedImage);
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
 
     // A customize full screen dialog.
     private class PopupDialog extends Dialog {
@@ -545,5 +834,32 @@ public class MapFragment extends Fragment {
         }
 
     }
+
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 1);
+                } else if (items[item].equals("Choose from Library")) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            1);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
 
 }
