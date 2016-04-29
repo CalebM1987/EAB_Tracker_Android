@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -56,8 +58,10 @@ import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.GeometryEngine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,6 +79,7 @@ public class MapFragment extends Fragment {
     private SpatialReference mSR = SpatialReference.create(3857);
     private SpatialReference wgsSR = SpatialReference.create(4326);
     private Graphic newSighting;
+    private Point userLocation;
 
     // feature layers
     private ArcGISFeatureLayer sightings;
@@ -211,7 +216,8 @@ public class MapFragment extends Fragment {
                         if (layer instanceof ArcGISFeatureLayer) {
                             // Query feature layer and display popups
                             ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
-                            if (featureLayer.getPopupInfo() != null && !featureLayer.getName().equals("County Boundary")) {
+                            if (featureLayer.getPopupInfo() != null) {
+
                                 // Query feature layer which is associated with
                                 // a popup definition.
                                 count.incrementAndGet();
@@ -319,7 +325,7 @@ public class MapFragment extends Fragment {
 
     private void addSighting() {
         if (map.isLoaded()){
-            Point userLocation = locationManager.getPoint();
+            userLocation = locationManager.getPoint();
 
             FeatureType[] featuretypes = sightings.getTypes();
             if (featuretypes == null || featuretypes.length < 1){
@@ -426,7 +432,9 @@ public class MapFragment extends Fragment {
                 Popup popup = featureLayer.createPopup(map, 0, fr);
                 popupContainer.addPopup(popup);
             }
-            createEditorBar(featureLayer, true);
+            if (!featureLayer.getName().equals("County Boundary")) {
+                createEditorBar(featureLayer, true);
+            }
             createPopupViews(id);
         }
 
@@ -712,11 +720,15 @@ public class MapFragment extends Fragment {
                     return;
                 popupDialog.dismiss();
 
-                Feature fr = popupContainer.getCurrentPopup().getFeature();
-                Graphic gr = new Graphic(fr.getGeometry(), fr.getSymbol(), fr.getAttributes());
-                fl.applyEdits(null, new Graphic[] { gr }, null,
-                        new EditCallbackListener("Deleting feature", fl,
-                                existing));
+                if (!fl.getName().equals("County Boundary")) {
+
+                    Feature fr = popupContainer.getCurrentPopup().getFeature();
+                    Graphic gr = new Graphic(fr.getGeometry(), fr.getSymbol(), fr.getAttributes());
+
+                    fl.applyEdits(null, new Graphic[]{gr}, null,
+                            new EditCallbackListener("Deleting feature", fl,
+                                    existing));
+                }
 
             }
         });
@@ -724,7 +736,7 @@ public class MapFragment extends Fragment {
             editorBar.addView(deleteButton);
 
         final Button attachmentButton = new Button(getContext());
-        attachmentButton.setText("Add Attachment");
+        attachmentButton.setText("Add Photo");
         attachmentButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -755,11 +767,22 @@ public class MapFragment extends Fragment {
 
                 Popup popup = popupContainer.getCurrentPopup();
                 Feature fr = popup.getFeature();
+
+                // get user location as WGS 84
+                Point locWGS = (Point) GeometryEngine.project(userLocation, map.getSpatialReference(), wgsSR);
                 Map<String, Object> attributes = fr.getAttributes();
                 Map<String, Object> updatedAttrs = popup.getUpdatedAttributes();
                 for (Entry<String, Object> entry : updatedAttrs.entrySet()) {
+
                     attributes.put(entry.getKey(), entry.getValue());
+
                 }
+
+                // add lat/long and address
+                attributes.put("Latitude", locWGS.getY());
+                attributes.put("Longitude", locWGS.getX());
+                attributes.put("Site_Address", getAddress(locWGS.getY(), locWGS.getX()));
+
                 Graphic newgr = new Graphic(fr.getGeometry(), null, attributes);
                 if (existing)
                     fl.applyEdits(null, null, new Graphic[] { newgr },
@@ -859,6 +882,36 @@ public class MapFragment extends Fragment {
             }
         });
         builder.show();
+    }
+
+    public String getAddress(Double lat, Double lon) {
+
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.ENGLISH);
+        StringBuilder strAddress = new StringBuilder();
+
+        try {
+
+            //Place your latitude and longitude
+            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+
+            if (addresses != null) {
+
+                Address fetchedAddress = addresses.get(0);
+
+
+                for (int i = 0; i < fetchedAddress.getMaxAddressLineIndex(); i++) {
+                    strAddress.append(fetchedAddress.getAddressLine(i) + " ");
+                }
+
+            }
+
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Could not get address..!", Toast.LENGTH_LONG).show();
+        }
+        return strAddress.toString();
     }
 
 
